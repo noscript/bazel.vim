@@ -6,6 +6,18 @@
 
 and more.
 
+## Comparison
+
+|Feature|[bazel.vim](https://github.com/noscript/bazel.vim)|official [vim-bazel](https://github.com/bazelbuild/vim-bazel)|
+|-|-|-|
+|Zero dependency|✓|✗(requires [Bash completion](https://bazel.build/install/completion) + [vim-maktaba](https://github.com/google/vim-maktaba))|
+|Tab completion|✓|✓|
+|Integration with Vim terminal|✓|✓(does not reuse terminal window)|
+|Build results in QuickFix|✓|✗|
+|Go to `BUILD` file|✓|✗|
+|Go to label/target definition|✓|✗|
+|List references|✓|✗|
+
 ## Default mappings
 
 * `gb` - Go to `BUILD` file corresponding to the current buffer.
