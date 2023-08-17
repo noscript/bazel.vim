@@ -1,0 +1,103 @@
+*bazel.txt*  Bazel build system integration
+
+Author:         Sergey Vlasov <sergey@vlasov.me>
+Licence:        Vim licence, see |license|
+Site:           https://github.com/noscript/bazel.vim
+Version:        0.1
+
+================================================================================
+CONTENTS                                                        *bazel-contents*
+
+    Intro......................................................|bazel-intro|
+    Mappings................................................|bazel-mappings|
+    Commands................................................|bazel-commands|
+    Functions..............................................|bazel-functions|
+
+================================================================================
+INTRO                                                              *bazel-intro*
+
+Provides support for Bazel target autocompletion, goto-definition for BUILD
+files, listing references and more.
+
+================================================================================
+MAPPINGS                                                        *bazel-mappings*
+
+Default global mappings:
+
+                                                              *bazel-goto-build*
+gb                  If current buffer is a file, go to corresponding BUILD file.
+                    Otherwise, jump to previous window and go to definition for
+                    label under cursor (useful for QuickFix and terminal
+                    buffers).
+
+                                                               *bazel-print-rel*
+b<C-G>              Similar to |g_CTRL-G| but prints path relative to workspace.
+
+                                                             *bazel-print-label*
+<leader>p           Print label that corresponds to current buffer.
+
+
+Default mappings for Bazel files (*.bzl, BUILD):
+
+                                                              *bazel-definition*
+gd                  Go to definition for label under cursor.
+
+                                                              *bazel-references*
+gr                  List references for label under cursor.
+
+If you wish to not use the default mappings, you can define your own using
+this example:
+>
+    let g:bazel_no_default_mappings = 1
+    nnoremap <silent> gb                               <Plug>(bazel-goto-build)
+    nnoremap <silent> b<C-G>                           <Plug>(bazel-print-rel)
+    nnoremap <silent> <leader>p                        <Plug>(bazel-print-label)
+    autocmd FileType bzl nnoremap <silent> <buffer> gd <Plug>(bazel-definition)
+    autocmd FileType bzl nnoremap <silent> <buffer> gr <Plug>(bazel-references)
+<
+================================================================================
+COMMANDS                                                        *bazel-commands*
+
+All commands supports |cmdline-completion| for targets.
+
+                                                                        *:Bazel*
+:Bazel {args}                     Run Bazel command in |terminal-window| and
+                                  open QuickFix when done.
+
+Example:
+>
+    :Bazel build //main:hello-world
+<
+                                                              *:BazelDefinition*
+:BazelDefinition {target}          Jump to target definition.
+
+Example:
+>
+    :BazelDefinition //main:hello-world
+<
+                                                              *:BazelReferences*
+:BazelReferences {target}          List target references.
+
+Example:
+>
+    :BazelReferences //lib:hello-time
+<
+
+You can add target completion to your own commands using |bazel#CompleteList()|
+function.
+
+================================================================================
+FUNCTIONS                                                      *bazel-functions*
+
+bazel#CompleteList()                                      *bazel#CompleteList()*
+                         Function to be used together with "customlist" argument
+                         to add target completion support to custom commands.
+
+Example:
+>
+    fun MyFunc(args)
+        echo a:args
+    endfun
+    command! -nargs=+ -complete=customlist,bazel#CompleteList \
+        MyCommand :call MyFunc(<q-args>)
+<
