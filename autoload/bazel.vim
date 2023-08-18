@@ -97,7 +97,7 @@ def S__label(): string
     endif
 
     var path = expand('%:p')->S__rel_path(g:bazel.info.workspace)
-    var output = systemlist($'cd {g:bazel.info.workspace}; set -o pipefail; bazel query {path} --output label {s_extra_args}')
+    var output = systemlist($'cd "{g:bazel.info.workspace}"; bazel query ''"{path}"'' --output label {s_extra_args}')
 
     if v:shell_error != 0 || empty(output)
       S__abort(output)
@@ -123,7 +123,7 @@ def S__jump_to_label(label__a: string)
 
   var path = label__a->substitute(':__subpackages__', '/...', '')
   echo 'Fetching...'
-  var output = systemlist($'cd {g:bazel.info.workspace}; set -o pipefail; bazel query {path} --output location {s_extra_args}')
+  var output = systemlist($'cd "{g:bazel.info.workspace}"; bazel query ''"{path}"'' --output location {s_extra_args}')
   echo '' | redraw
 
   if v:shell_error != 0 || empty(output)
@@ -202,7 +202,7 @@ def S__configure()
   g:bazel.status = s_PENDING
 
   echo 'Configuring bazel...'
-  var output = systemlist($'set -o pipefail; bazel info {s_extra_args}')
+  var output = systemlist($'bazel info {s_extra_args}')
   echo '' | redraw
   if v:shell_error != 0
     g:bazel.status = s_FAILED
@@ -242,7 +242,7 @@ def S__goto_build()
   else
     S__configure()
     var path = expand('%:p')->S__rel_path(g:bazel.info.workspace)
-    var output = systemlist($'cd {g:bazel.info.workspace}; set -o pipefail; bazel query {path} --output location --noincompatible_display_source_file_location {s_extra_args}')
+    var output = systemlist($'cd "{g:bazel.info.workspace}"; bazel query ''"{path}"'' --output location --noincompatible_display_source_file_location {s_extra_args}')
 
     if v:shell_error != 0 || empty(output)
       S__abort(output)
@@ -284,7 +284,7 @@ def S__show_references(label__a = '')
   endif
 
   echo 'Fetching...'
-  var output = systemlist($'cd {g:bazel.info.workspace}; set -o pipefail; bazel query "rdeps(//..., {label})" --output location {s_extra_args}')
+  var output = systemlist($'cd "{g:bazel.info.workspace}"; bazel query ''rdeps(//..., "{label}")'' --output location {s_extra_args}')
   echo '' | redraw
   cgetexpr output
   copen
@@ -317,7 +317,7 @@ export def CompleteList(arg_lead__a: string, cmd_line__a: string, cursor_pos__a:
       target = '...'
     endif
 
-    var targets = systemlist($'cd {g:bazel.info.workspace}; set -o pipefail; bazel query {target} {s_extra_args}')
+    var targets = systemlist($'cd "{g:bazel.info.workspace}"; bazel query ''"{target}"'' {s_extra_args}')
     if v:shell_error != 0
       echoerr 'Bazel query error: ' .. v:shell_error
       return []
