@@ -240,6 +240,8 @@ def S__goto_build()
       wincmd w
       S__jump_to_label(token)
     endif
+  elseif &ft == 'bzl'
+    return
   else
     S__configure()
     var path = expand('%:p')->S__rel_path(g:bazel.info.workspace)
@@ -342,4 +344,3 @@ nnoremap <unique> <Plug>(bazel-print-rel)   <ScriptCmd>S__print_relative_path()<
 nnoremap <unique> <Plug>(bazel-print-label) <ScriptCmd>S__print_label()<CR>
 nnoremap <unique> <Plug>(bazel-references)  <ScriptCmd>S__show_references()<CR>
 nnoremap <unique> <Plug>(bazel-definition)  <ScriptCmd>S__goto_definition()<CR>
-
