@@ -169,15 +169,18 @@ export def DetectWorkspace()
     return
   endif
 
-  var cwd = getcwd()
-  var workspace_file = findfile('WORKSPACE', cwd .. ';')
+  var dir = getcwd()
+  if empty(&bt)
+    dir = bufname()->resolve()->fnamemodify(':p:h')->fnameescape()
+  endif
+  var workspace_file = findfile('WORKSPACE', dir .. ';')
   if empty(workspace_file)
     g:bazel.status = s_NOT_BAZEL
     return
   endif
 
   g:bazel.status = s_DETECTED
-  g:bazel.info.workspace = workspace_file->fnamemodify(':h')
+  g:bazel.info.workspace = workspace_file->fnamemodify(':p:h')
 
   command! -nargs=+ -complete=customlist,bazel#CompleteList Bazel           S__run_command(<q-args>)
   command! -nargs=1 -complete=customlist,bazel#CompleteList BazelDefinition S__jump_to_label(<q-args>)
@@ -200,7 +203,7 @@ def S__configure()
   g:bazel.status = s_PENDING
 
   echo 'Configuring bazel...'
-  var output = systemlist($'bazel info {s_extra_args}')
+  var output = systemlist($'cd "{g:bazel.info.workspace}"; bazel info {s_extra_args}')
   echo '' | redraw
   if v:shell_error != 0
     g:bazel.status = s_FAILED
