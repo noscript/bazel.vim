@@ -187,8 +187,6 @@ export def DetectWorkspace()
     nnoremap <silent> gb          <Plug>(bazel-goto-build)
     nnoremap <silent> b<C-G>      <Plug>(bazel-print-rel)
     nnoremap <silent> <leader>p   <Plug>(bazel-print-label)
-    autocmd FileType bzl nnoremap <silent> <buffer> gd <Plug>(bazel-definition)
-    autocmd FileType bzl nnoremap <silent> <buffer> gr <Plug>(bazel-references)
   endif
 
   set errorformat^=%t%*[^:]:\ %f:%l:%c:\ %m # recognize error type in "<TYPE>: <file><lnum>:<col>: <message>" form

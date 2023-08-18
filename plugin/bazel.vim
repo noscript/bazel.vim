@@ -13,6 +13,5 @@ import autoload 'bazel.vim'
 
 augroup Bazel
   autocmd!
-  autocmd FileType bzl if expand('%:t') == 'BUILD' | bazel#DetectWorkspace() | endif
-  autocmd DirChanged * bazel#DetectWorkspace()
+  autocmd VimEnter,BufEnter * bazel#DetectWorkspace()
 augroup END
