@@ -1,6 +1,10 @@
 vim9script
 
-if exists("b:did_ftplugin")
+if !executable('bazel')
+  finish
+endif
+
+if exists('b:did_ftplugin')
   finish
 endif
 b:did_ftplugin = 1
